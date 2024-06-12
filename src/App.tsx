@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import { styled } from 'styled-components';
+import Board from './components/Board';
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+`;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    const [targetWord, setTargetWord] = useState<string>("CAROL");
+    const [gameOver, setGameOver] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
 
-export default App;
+    const handleGameOver = (isWin: boolean) => {
+      setGameOver(true);
+      setMessage(isWin ? 'Congratulations! You won!' : `Game over! The word was ${targetWord}.`);
+    };
+
+    const handleRestart = () => {
+      setTargetWord("CAROL");
+      setGameOver(false);
+      setMessage('');
+    };
+
+    return (
+      <AppContainer>
+        <h1>Letro Game</h1>
+        <Board targetWord={targetWord} onGameOver={handleGameOver} gameOver={gameOver} />
+        {gameOver && (
+          <>
+            <p>{message}</p>
+            <button onClick={handleRestart}>Restart</button>
+          </>
+        )}
+      </AppContainer>
+    );
+  }
+
+  export default App;
